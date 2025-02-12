@@ -18,6 +18,7 @@ class ItemSearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initialize()
+      presenter?.viewDidLoad()
     }
 }
 

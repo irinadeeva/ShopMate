@@ -6,8 +6,16 @@
 //
 
 protocol ItemSearchInteractorProtocol: AnyObject {
+  func fetchTasks()
 }
 
 class ItemSearchInteractor: ItemSearchInteractorProtocol {
     weak var presenter: ItemSearchPresenterProtocol?
+
+  func fetchTasks() {
+    ItemService.shared.fetchItems { [weak self] items in
+      guard let self = self else { return }
+//      self.presenter?.viewDidLoad(items: items)
+    }
+  }
 }
