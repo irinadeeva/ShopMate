@@ -1,5 +1,6 @@
 protocol ItemSearchRouterProtocol {
   func navigateToItemDetail(for itemId: Int)
+  func navigateToCart()
 }
 
 class ItemSearchRouter: ItemSearchRouterProtocol {
@@ -8,5 +9,10 @@ class ItemSearchRouter: ItemSearchRouterProtocol {
   func navigateToItemDetail(for itemId: Int) {
     let itemDetailViewController = ItemDetailModuleBuilder.build(for: itemId)
     viewController?.navigationController?.pushViewController(itemDetailViewController, animated: true)
+  }
+
+  func navigateToCart() {
+    let cartViewController = CartModuleBuilder.build()
+    viewController?.navigationController?.pushViewController(cartViewController, animated: true)
   }
 }

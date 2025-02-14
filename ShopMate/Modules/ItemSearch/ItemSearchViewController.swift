@@ -145,9 +145,7 @@ private extension ItemSearchViewController {
   }
 
   @objc func cartButtonTapped() {
-      // Handle the cart button tap
-      print("Cart button tapped")
-      // Navigate to the cart or show cart details
+    presenter?.showCart()
   }
 }
 

@@ -129,7 +129,8 @@ private extension ItemDetailViewController {
     }
 
     @objc func addToCartTapped() {
-        print("Item added to shopping list: \(item?.title ?? "")")
+      guard let item = item else { return }
+      presenter?.addToCart(for: item)
     }
 
     func updateUI(with item: Item) {

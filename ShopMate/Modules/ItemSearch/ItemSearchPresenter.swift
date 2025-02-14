@@ -5,6 +5,7 @@ protocol ItemSearchPresenterProtocol: AnyObject {
   func fetchItemsNextPage()
   func getCachedImage(for images: [String]) -> Data?
   func showDetails(of id: Int)
+  func showCart()
 }
 
 // MARK: - State
@@ -87,6 +88,10 @@ extension ItemSearchPresenter: ItemSearchPresenterProtocol {
 
   func showDetails(of id: Int) {
     router.navigateToItemDetail(for: id)
+  }
+
+  func showCart() {
+    router.navigateToCart()
   }
 }
 
