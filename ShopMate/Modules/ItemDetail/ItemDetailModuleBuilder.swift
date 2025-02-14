@@ -1,17 +1,10 @@
-//
-//  ItemDetailModuleBuilder.swift
-//  Super easy dev
-//
-//  Created by Irina Deeva on 11/02/25
-//
-
 import UIKit
 
 class ItemDetailModuleBuilder {
-    static func build() -> ItemDetailViewController {
+  static func build(for id: Int) -> ItemDetailViewController {
         let interactor = ItemDetailInteractor()
         let router = ItemDetailRouter()
-        let presenter = ItemDetailPresenter(interactor: interactor, router: router)
+        let presenter = ItemDetailPresenter(interactor: interactor, router: router, id: id)
         let viewController = ItemDetailViewController()
       
         presenter.view  = viewController

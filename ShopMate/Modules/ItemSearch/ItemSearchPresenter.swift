@@ -1,12 +1,10 @@
-//
-//  ItemSearchPresenter.swift
-//  Super easy dev
-//
-//  Created by Irina Deeva on 11/02/25
-//
+import Foundation
 
 protocol ItemSearchPresenterProtocol: AnyObject {
   func viewDidLoad()
+  func fetchItemsNextPage()
+  func getCachedImage(for images: [String]) -> Data?
+  func showDetails(of id: Int)
 }
 
 // MARK: - State
@@ -18,14 +16,16 @@ enum ItemSearchDetailState {
 final class ItemSearchPresenter {
   weak var view: ItemSearchViewProtocol?
   var router: ItemSearchRouterProtocol
-  var interactor: ItemSearchInteractorProtocol
+  var interactor: ItemSearchInteractorInput
+  private var imageCache = NSCache<NSString, NSData>()
+  private var lastOffset: Int = 0
   private var state = ItemSearchDetailState.initial {
     didSet {
       stateDidChanged()
     }
   }
 
-  init(interactor: ItemSearchInteractorProtocol, router: ItemSearchRouterProtocol) {
+  init(interactor: ItemSearchInteractorInput, router: ItemSearchRouterProtocol) {
     self.interactor = interactor
     self.router = router
   }
@@ -36,23 +36,66 @@ final class ItemSearchPresenter {
         //TODO: change
           assertionFailure("can't move to initial state")
       case .loading:
-//          view?.showLoading()
-        interactor.fetchTasks()
+        view?.showLoadingAndBlockUI()
+        interactor.fetchItems(for: lastOffset)
       case .data(let items):
-//          view?.fetchNfts(nfts)
-//          view?.hideLoading()
-        print(items)
+        view?.fetchItems(items)
+        view?.hideLoadingAndUnblockUI()
       case .failed(let error):
-//          let errorModel = makeErrorModel(error)
-//          view?.hideLoading()
-//          view?.showError(errorModel)
-        print(error)
+          let errorModel = makeErrorModel(error)
+        view?.hideLoadingAndUnblockUI()
+          view?.showError(errorModel)
       }
+  }
+
+  private func makeErrorModel(_ error: Error) -> ErrorModel {
+    let message: String
+
+    if let errorWithMessage = error as? ErrorWithMessage {
+      message = errorWithMessage.message
+    } else {
+      message = "An unknown error occurred. Please try again later."
+    }
+
+    let actionText = "Repeat"
+    return ErrorModel(message: message,
+                      actionText: actionText) { [weak self] in
+      self?.state = .loading
+    }
   }
 }
 
 extension ItemSearchPresenter: ItemSearchPresenterProtocol {
   func viewDidLoad() {
     state = .loading
+  }
+
+  func fetchItemsNextPage() {
+    if lastOffset < 60 {
+      lastOffset += 10
+      state = .loading
+    }
+  }
+
+  func getCachedImage(for images: [String]) -> Data? {
+    if let firstImageUrlString = images.first {
+      return interactor.fetchItemFirstImage(for: firstImageUrlString)
+    }
+
+    return nil
+  }
+
+  func showDetails(of id: Int) {
+    router.navigateToItemDetail(for: id)
+  }
+}
+
+extension ItemSearchPresenter: ItemSearchInteractorOutput {
+  func didFetchItems(_ items: [Item]) {
+    state = .data(items)
+  }
+  
+  func didFailToFetchItems(with error: any Error) {
+    state = .failed(error)
   }
 }

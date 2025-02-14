@@ -11,8 +11,5 @@ protocol NetworkRequest {
   var endpoint: String { get }
   var httpMethod: HttpMethod { get }
   var dto: Data? { get }
-}
-
-extension NetworkRequest {
-  var queryItems: [URLQueryItem] { [] }
+  var queryItems: [URLQueryItem] { get }
 }

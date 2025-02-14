@@ -1,9 +1,6 @@
 import Foundation
 
-enum NetworkClientError: Error
-//,
-//                          ErrorWithMessage
-{
+enum NetworkClientError: Error, ErrorWithMessage {
   case httpStatusCode(Int)
   case urlRequestError(Error)
   case urlSessionError
@@ -139,35 +136,6 @@ struct DefaultNetworkClient: NetworkClient {
 
     return urlRequest
   }
-
-//  private func create(request: NetworkRequest) -> URLRequest? {
-//      guard let endpoint = request.endpoint else {
-//          assertionFailure("Empty endpoint")
-//          return nil
-//      }
-//
-//      var urlRequest = URLRequest(url: endpoint)
-//      urlRequest.httpMethod = request.httpMethod.rawValue
-//
-//      urlRequest.setValue("\(RequestConstants.token)", forHTTPHeaderField: "X-Practicum-Mobile-Token")
-//
-//      switch request.httpMethod {
-//      case .get, .delete, .post:
-//          if let dto = request.dto,
-//              let dtoEncoded = try? encoder.encode(dto) {
-//              urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//              urlRequest.httpBody = dtoEncoded
-//          }
-//      case .put:
-//          if let dto = request.dto {
-//              urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-//              urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-//              urlRequest.httpBody = dto
-//          }
-//      }
-//
-//      return urlRequest
-//  }
 
   private func parse<T: Decodable>(data: Data, type _: T.Type, onResponse: @escaping (Result<T, Error>) -> Void) {
     do {
