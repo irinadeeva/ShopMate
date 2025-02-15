@@ -12,7 +12,7 @@ protocol ItemDetailPresenterProtocol: AnyObject {
   func addToCart(_ purchase: Purchase)
 }
 
-class ItemDetailPresenter {
+final class ItemDetailPresenter {
     weak var view: ItemDetailViewProtocol?
     var router: ItemDetailRouterProtocol
     var interactor: ItemDetailInteractorInput

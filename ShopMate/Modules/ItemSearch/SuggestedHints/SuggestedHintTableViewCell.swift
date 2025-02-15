@@ -1,6 +1,6 @@
 import UIKit
 
-class SuggestedHintTableViewCell: UITableViewCell {
+final class SuggestedHintTableViewCell: UITableViewCell {
     static let identifier = "SuggestionCell"
 
     private var cellLabel: UILabel = {

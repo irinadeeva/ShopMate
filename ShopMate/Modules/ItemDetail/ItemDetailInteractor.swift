@@ -11,7 +11,7 @@ protocol ItemDetailInteractorOutput: AnyObject {
   func didFailToFetchItem(with error: Error)
 }
 
-class ItemDetailInteractor: ItemDetailInteractorInput {
+final class ItemDetailInteractor: ItemDetailInteractorInput {
   weak var presenter: ItemDetailInteractorOutput?
 
   func fetchItem(with id: Int) {

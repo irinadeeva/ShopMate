@@ -4,7 +4,7 @@ protocol CartViewProtocol: AnyObject, LoadingView, ErrorView {
   func displayItems(_ purchases: [Purchase])
 }
 
-class CartViewController: UIViewController {
+final class CartViewController: UIViewController {
   // MARK: - Public
   var presenter: CartPresenterProtocol?
   var activityIndicator = UIActivityIndicatorView()

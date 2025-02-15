@@ -21,7 +21,7 @@ protocol ItemSearchInteractorOutput: AnyObject {
   func didFailToFetchItems(with error: Error)
 }
 
-class ItemSearchInteractor: ItemSearchInteractorInput {
+final class ItemSearchInteractor: ItemSearchInteractorInput {
   weak var presenter: ItemSearchInteractorOutput?
 
   func fetchItems(for offset: Int) {

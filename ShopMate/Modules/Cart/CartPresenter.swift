@@ -7,16 +7,13 @@ enum CartState {
 protocol CartPresenterProtocol: AnyObject {
   func viewDidLoad()
   func viewWillAppear()
-
-  //    func didTapShareButton()
-  //    func didTapClearList()
   func didTapDeleteButton(_ id: Int)
   func getCachedImage(for images: [String]) -> Data?
   func addToCart(for purchase: Purchase)
   func didSelectItem(_ id: Int)
 }
 
-class CartPresenter {
+final class CartPresenter {
   weak var view: CartViewProtocol?
   var router: CartRouterProtocol
   var interactor: CartInteractorInput
@@ -67,7 +64,7 @@ class CartPresenter {
 }
 
 
-extension CartPresenter: CartPresenterProtocol {  
+extension CartPresenter: CartPresenterProtocol {
   func viewDidLoad() {
     state = .loading
   }

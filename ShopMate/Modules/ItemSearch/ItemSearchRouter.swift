@@ -3,7 +3,7 @@ protocol ItemSearchRouterProtocol {
   func navigateToCart()
 }
 
-class ItemSearchRouter: ItemSearchRouterProtocol {
+final class ItemSearchRouter: ItemSearchRouterProtocol {
     weak var viewController: ItemSearchViewController?
 
   func navigateToItemDetail(for itemId: Int) {

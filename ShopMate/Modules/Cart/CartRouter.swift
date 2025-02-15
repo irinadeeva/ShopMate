@@ -2,7 +2,7 @@ protocol CartRouterProtocol {
   func navigateToItemDetail(for itemId: Int)
 }
 
-class CartRouter: CartRouterProtocol {
+final class CartRouter: CartRouterProtocol {
   weak var viewController: CartViewController?
 
   func navigateToItemDetail(for itemId: Int) {

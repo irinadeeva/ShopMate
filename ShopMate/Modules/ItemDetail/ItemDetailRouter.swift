@@ -2,7 +2,7 @@ protocol ItemDetailRouterProtocol {
   func navigateBack()
 }
 
-class ItemDetailRouter: ItemDetailRouterProtocol {
+final class ItemDetailRouter: ItemDetailRouterProtocol {
     weak var viewController: ItemDetailViewController?
 
   func navigateBack() {

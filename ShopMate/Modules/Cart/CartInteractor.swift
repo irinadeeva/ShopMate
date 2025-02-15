@@ -12,7 +12,7 @@ protocol CartInteractorOutput: AnyObject {
   func didFailWithError(_ error: Error)
 }
 
-class CartInteractor: CartInteractorInput {
+final class CartInteractor: CartInteractorInput {
   weak var presenter: CartInteractorOutput?
   
   func fetchPurchases() {
