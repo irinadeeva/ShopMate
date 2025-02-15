@@ -1,19 +1,15 @@
 enum CartState {
-  case initial, loading, data([Item: Int]), failed(Error)
+  case initial, loading, data([Purchase]), failed(Error)
 }
 
 protocol CartPresenterProtocol: AnyObject {
   func viewDidLoad()
+  func didSelectItem(_ item: Item)
+  //    func didTapShareButton()
+  //    func didTapClearList()
+  //    func didTapDeleteItem(_ item: Item)
+  //    func didChangeItemQuantity(_ item: Item, quantity: Int)
 }
-
-//protocol ShoppingListPresenterProtocol: AnyObject {
-//    func viewDidLoad()
-//    func didSelectItem(_ item: Item)
-//    func didTapShareButton()
-//    func didTapClearList()
-//    func didTapDeleteItem(_ item: Item)
-//    func didChangeItemQuantity(_ item: Item, quantity: Int)
-//}
 
 class CartPresenter {
     weak var view: CartViewProtocol?
@@ -67,13 +63,17 @@ class CartPresenter {
 
 
 extension CartPresenter: CartPresenterProtocol {
+  func didSelectItem(_ item: Item) {
+    
+  }
+  
   func viewDidLoad() {
     state = .loading
   }
 }
 
 extension CartPresenter: CartInteractorOutput {
-  func didFetchPurchases(_ purchases: [Item: Int]) {
+  func didFetchPurchases(_ purchases: [Purchase]) {
     state = .data(purchases)
   }
   

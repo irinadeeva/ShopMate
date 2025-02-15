@@ -3,6 +3,8 @@ import Foundation
 protocol ItemSearchInteractorInput: AnyObject {
   func fetchItems(for offset: Int)
   func fetchItemFirstImage(for url: String) -> Data?
+  func addToCart(for purchase: Purchase)
+  func fetchUpdatedItems()
 }
 
 //protocol TaskListInteractorInput: AnyObject {
@@ -12,7 +14,7 @@ protocol ItemSearchInteractorInput: AnyObject {
 //}
 
 protocol ItemSearchInteractorOutput: AnyObject {
-  func didFetchItems(_ items: [Item])
+  func didFetchItems(_ purchases: [Purchase])
   //  func didFetchItemImage(_ data: Data?)
   //  func didFetchTask(_ task: TaskItem)
   //  func didFetchId(_ taskId: UUID)
@@ -35,17 +37,29 @@ class ItemSearchInteractor: ItemSearchInteractorInput {
         }
 
         cacheFirstImage(for: items)
+        addToPurchase(for: items)
 
-        self.presenter?.didFetchItems(items)
+        let purchasedItems = PurchaseService.shared.getPurchases()
+
+        self.presenter?.didFetchItems(purchasedItems)
       case .failure(let error):
         self.presenter?.didFailToFetchItems(with: error)
       }
     }
   }
 
+  func fetchUpdatedItems() {
+    let purchasedItems = PurchaseService.shared.getPurchases()
+    self.presenter?.didFetchItems(purchasedItems)
+  }
+
   func fetchItemFirstImage(for url: String) -> Data? {
     let data = ImageCacheService.shared.getImage(for: url)
     return data
+  }
+
+  func addToCart(for purchase: Purchase) {
+    PurchaseService.shared.storePurchase(purchase)
   }
 
   private func cacheFirstImage(for items: [Item]) {
@@ -55,5 +69,9 @@ class ItemSearchInteractor: ItemSearchInteractorInput {
         ImageCacheService.shared.storeImage(for: image)
       }
     }
+  }
+
+  private func addToPurchase(for items: [Item]) {
+    PurchaseService.shared.storeItems(items)
   }
 }

@@ -3,11 +3,11 @@ import Foundation
 protocol ItemDetailInteractorInput: AnyObject {
   func fetchItem(with id: Int)
   func fetchCachedImage(for images: [String]) -> [Data]
-  func addToCart(for item: Item)
+  func addToCart(_ purchase: Purchase)
 }
 
 protocol ItemDetailInteractorOutput: AnyObject {
-  func didFetchItem(_ item: Item)
+  func didFetchItem(_ purchase: Purchase)
   func didFailToFetchItem(with error: Error)
 }
 
@@ -15,15 +15,13 @@ class ItemDetailInteractor: ItemDetailInteractorInput {
   weak var presenter: ItemDetailInteractorOutput?
 
   func fetchItem(with id: Int) {
-    let item = ItemService.shared.fetchItem(for: id)
+    let purchasedItem = PurchaseService.shared.getPurchase(for: id)
 
-
-
-    if let item {
-      presenter?.didFetchItem(item)
+    if let purchasedItem  {
+      presenter?.didFetchItem(purchasedItem)
     } else {
-      //TODO: error
-      //      presenter?.didFailToFetchItem(with: Error())
+//TODO: do Error
+//      presenter?.didFailToFetchItem(with: )
     }
   }
 
@@ -39,8 +37,8 @@ class ItemDetailInteractor: ItemDetailInteractorInput {
     return datas
   }
 
-  func addToCart(for item: Item) {
-    CartService.shared.storePurchase(item)
+  func addToCart(_ purchase: Purchase) {
+    PurchaseService.shared.storePurchase(purchase)
   }
 
   private func cacheImages(for item: Item) {

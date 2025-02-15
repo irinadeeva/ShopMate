@@ -1,7 +1,7 @@
 import UIKit
 
 protocol ItemSearchViewProtocol: AnyObject, ErrorView, LoadingView {
-  func fetchItems(_ items: [Item])
+  func fetchItems(_ purchases: [Purchase])
 }
 
 class ItemSearchViewController: UIViewController {
@@ -13,7 +13,7 @@ class ItemSearchViewController: UIViewController {
                                                         rightInset: 16,
                                                         cellSpacing: 7)
 
-  private var items: [Item] = []
+  private var purchases: [Purchase] = []
   private var hints: [String] = []
   private var query: String = ""
   private let searchController: UISearchController = {
@@ -72,6 +72,12 @@ class ItemSearchViewController: UIViewController {
         initialize()
       presenter?.viewDidLoad()
     }
+
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+
+    presenter?.viewWillAppear()
+  }
 }
 
 // MARK: - Private functions
@@ -152,11 +158,11 @@ private extension ItemSearchViewController {
 
 // MARK: - ItemSearchViewProtocol
 extension ItemSearchViewController: ItemSearchViewProtocol {
-  func fetchItems(_ items: [Item]) {
-    self.items = items
-    print(items.count)
+  func fetchItems(_ purchases: [Purchase]) {
+    self.purchases = purchases
+    print(purchases.count)
 
-      if self.items.count != 0 {
+      if self.purchases.count != 0 {
           emptyLabel.isHidden = true
           suggestionsTableView.isHidden = true
           itemsCollection.isHidden = false
@@ -171,7 +177,7 @@ extension ItemSearchViewController: ItemSearchViewProtocol {
 
 extension ItemSearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
+        return purchases.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -181,19 +187,20 @@ extension ItemSearchViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
 
-        let item = items[indexPath.item]
+      let item = purchases[indexPath.item].item
 
-      let cachedImage = presenter?.getCachedImage(for: item.images)
-        if let imageData = cachedImage {
+        let cachedImage = presenter?.getCachedImage(for: item.images)
+          if let imageData = cachedImage {
             cell.updateImage(with: imageData)
         }
 
         cell.updateCell(with: item)
+        cell.delegate = self
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row + 1 == items.count {
+        if indexPath.row + 1 == purchases.count {
             DispatchQueue.global().async { [weak self] in
                 guard let self else { return }
               self.presenter?.fetchItemsNextPage()
@@ -218,7 +225,7 @@ extension ItemSearchViewController: UICollectionViewDelegateFlowLayout {
 
 extension ItemSearchViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-      presenter?.showDetails(of: items[indexPath.row].id)
+      presenter?.showDetails(of: purchases[indexPath.row].item.id)
     }
 }
 
@@ -279,4 +286,17 @@ extension ItemSearchViewController: UISearchResultsUpdating {
             showAllSearchHistory()
         }
     }
+}
+
+extension ItemSearchViewController: ItemCellDelegate {
+  func didTapAddButton(in cell: ItemCell, with quality: Int) {
+    guard let indexPath = itemsCollection.indexPath(for: cell) else { return }
+    purchases[indexPath.row].quantity = quality
+    
+    let purchase = purchases[indexPath.row]
+    
+    //TODO: work with quality + - 0
+    
+    presenter?.addToCart(for: purchase)
+  }
 }

@@ -3,7 +3,7 @@ protocol CartInteractorInput: AnyObject {
 }
 
 protocol CartInteractorOutput: AnyObject {
-  func didFetchPurchases(_ purchases: [Item: Int])
+  func didFetchPurchases(_ purchases: [Purchase])
   func didFailWithError(_ error: Error)
 }
 
@@ -11,7 +11,7 @@ class CartInteractor: CartInteractorInput {
   weak var presenter: CartInteractorOutput?
 
   func fetchPurchases() {
-    let purchases = CartService.shared.getPurchase()
+    let purchases = PurchaseService.shared.getPurchaseInCart()
 
     presenter?.didFetchPurchases(purchases)
   }

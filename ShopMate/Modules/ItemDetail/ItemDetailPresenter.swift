@@ -1,14 +1,15 @@
 import Foundation
 
 enum ItemDetailState {
-  case initial, loading, data(Item), failed(Error)
+  case initial, loading, data(Purchase), failed(Error)
 }
 
 protocol ItemDetailPresenterProtocol: AnyObject {
   func viewDidLoad()
   func navigateBack()
   func getCachedImage(for images: [String]) -> [Data]
-  func addToCart(for item: Item)
+//  func addToCart(for item: Item)
+  func addToCart(_ purchase: Purchase)
 }
 
 class ItemDetailPresenter {
@@ -76,14 +77,14 @@ extension ItemDetailPresenter: ItemDetailPresenterProtocol {
     router.navigateBack()
   }
 
-  func addToCart(for item: Item) {
-    interactor.addToCart(for: item)
+  func addToCart(_ purchase: Purchase) {
+    interactor.addToCart(purchase)
   }
 }
 
 extension ItemDetailPresenter: ItemDetailInteractorOutput {
-  func didFetchItem(_ item: Item) {
-    state = .data(item)
+  func didFetchItem(_ purchase: Purchase) {
+    state = .data(purchase)
   }
   
   func didFailToFetchItem(with error: any Error) {

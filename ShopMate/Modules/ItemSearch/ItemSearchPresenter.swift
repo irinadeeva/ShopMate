@@ -2,16 +2,18 @@ import Foundation
 
 protocol ItemSearchPresenterProtocol: AnyObject {
   func viewDidLoad()
+  func viewWillAppear()
   func fetchItemsNextPage()
   func getCachedImage(for images: [String]) -> Data?
   func showDetails(of id: Int)
   func showCart()
+  func addToCart(for purchase: Purchase)
 }
 
 // MARK: - State
 
 enum ItemSearchDetailState {
-  case initial, loading, failed(Error), data([Item])
+  case initial, loading, updating, failed(Error), data([Purchase])
 }
 
 final class ItemSearchPresenter {
@@ -39,6 +41,9 @@ final class ItemSearchPresenter {
       case .loading:
         view?.showLoadingAndBlockUI()
         interactor.fetchItems(for: lastOffset)
+      case .updating:
+        view?.showLoadingAndBlockUI()
+        interactor.fetchUpdatedItems()
       case .data(let items):
         view?.fetchItems(items)
         view?.hideLoadingAndUnblockUI()
@@ -71,6 +76,10 @@ extension ItemSearchPresenter: ItemSearchPresenterProtocol {
     state = .loading
   }
 
+  func viewWillAppear() {
+//    state = .updating
+  }
+
   func fetchItemsNextPage() {
     if lastOffset < 60 {
       lastOffset += 10
@@ -93,11 +102,15 @@ extension ItemSearchPresenter: ItemSearchPresenterProtocol {
   func showCart() {
     router.navigateToCart()
   }
+
+  func addToCart(for purchase: Purchase) {
+    interactor.addToCart(for: purchase)
+  }
 }
 
 extension ItemSearchPresenter: ItemSearchInteractorOutput {
-  func didFetchItems(_ items: [Item]) {
-    state = .data(items)
+  func didFetchItems(_ purchases: [Purchase]) {
+    state = .data(purchases)
   }
   
   func didFailToFetchItems(with error: any Error) {
