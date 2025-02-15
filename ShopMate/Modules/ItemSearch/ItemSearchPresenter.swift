@@ -77,7 +77,7 @@ extension ItemSearchPresenter: ItemSearchPresenterProtocol {
   }
 
   func viewWillAppear() {
-//    state = .updating
+    state = .updating
   }
 
   func fetchItemsNextPage() {

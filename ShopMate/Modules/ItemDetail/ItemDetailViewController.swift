@@ -147,10 +147,12 @@ private extension ItemDetailViewController {
     let item = purchase.item
     titleLabel.text = item.title
     itemDescription.text = item.description
-    priceLabel.text = "Price: \(item.price)₽"
+    priceLabel.text = "Price: $\(item.price)"
     categoryLabel.text = "Category: \(item.category.name)"
     updateImageUI(images: item.images)
-    quantitySelector.updateQuantity(purchase.quantity)
+    if purchase.quantity != 0 {
+      quantitySelector.updateQuantity(purchase.quantity)
+    }
   }
 
   func updateImageUI(images: [String]) {

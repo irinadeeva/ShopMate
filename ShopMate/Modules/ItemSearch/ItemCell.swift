@@ -1,7 +1,7 @@
 import UIKit
 
 protocol ItemCellDelegate: AnyObject {
-    func didTapAddButton(in cell: ItemCell, with quality: Int)
+  func didTapAddButton(in cell: ItemCell, with quality: Int)
 }
 
 final class ItemCell: UICollectionViewCell {
@@ -28,18 +28,6 @@ final class ItemCell: UICollectionViewCell {
     return label
   }()
 
-//  private let addButton: UIButton = {
-//    let button = UIButton(type: .system)
-//    button.setTitle("+", for: .normal)
-//    button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-//    button.backgroundColor = .systemBlue
-//    button.setTitleColor(.white, for: .normal)
-//    button.layer.cornerRadius = 6
-//    button.layer.masksToBounds = true
-//    button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
-//    return button
-//  }()
-
   private let quantitySelector = QuantitySelectorView()
 
   override init(frame: CGRect) {
@@ -58,10 +46,6 @@ final class ItemCell: UICollectionViewCell {
   func updateImage(with data: Data) {
     imageView.image = UIImage(data: data)
   }
-
-//  @objc private func addButtonTapped() {
-//    delegate?.didTapAddButton(in: self)
-//  }
 
   private func setupUI() {
     contentView.backgroundColor = .background
@@ -87,11 +71,6 @@ final class ItemCell: UICollectionViewCell {
       titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
       titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
 
-//      addButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-//      addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-//      addButton.heightAnchor.constraint(equalToConstant: 30),
-//      addButton.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
-
       quantitySelector.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
       quantitySelector.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
       quantitySelector.heightAnchor.constraint(equalToConstant: 30),
@@ -99,9 +78,9 @@ final class ItemCell: UICollectionViewCell {
     ])
 
     quantitySelector.onQuantityChanged = { [weak self] quantity in
-//      self?.purchase?.quantity = quantity
-//      guard let purchase = self?.purchase else { return }
-//      self?.presenter?.addToCart(purchase)
+      //      self?.purchase?.quantity = quantity
+      //      guard let purchase = self?.purchase else { return }
+      //      self?.presenter?.addToCart(purchase)
 
       guard let self else { return }
       delegate?.didTapAddButton(in: self, with: quantity)

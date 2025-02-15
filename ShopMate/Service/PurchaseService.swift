@@ -16,7 +16,9 @@ final class PurchaseService {
 
 extension PurchaseService: PurchaseServiceProtocol {
   func getPurchases() -> [Purchase] {
-    storage.getPurchases()
+   let purchases = storage.getPurchases()
+    let sortedPurchases = purchases.sorted { $0.item.id < $1.item.id }
+    return sortedPurchases
   }
   
   func getPurchase(for id: Int) -> Purchase? {

@@ -17,6 +17,8 @@ class CartViewController: UIViewController {
     //      table.allowsSelection = false
     table.dataSource = self
     table.delegate = self
+    table.rowHeight = UITableView.automaticDimension
+    table.estimatedRowHeight = 120
     table.translatesAutoresizingMaskIntoConstraints = false
     return table
   }()
@@ -33,15 +35,17 @@ class CartViewController: UIViewController {
 private extension CartViewController {
   
   func initialize() {
+    view.backgroundColor = .background
     view.addSubview(tableView)
-    tableView.frame = view.bounds
+//    tableView.frame = view.bounds
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
     
-    //      NSLayoutConstraint.activate([
-    //          tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-    //          tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-    //          tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-    //      ])
+          NSLayoutConstraint.activate([
+              tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+              tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+              tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+              tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+          ])
   }
   
   @objc private func shareTapped() {
@@ -67,10 +71,9 @@ extension CartViewController: UITableViewDelegate, UITableViewDataSource {
       return UITableViewCell()
     }
     
-    let item = purchases[indexPath.row].item
-    let quantity = purchases[indexPath.row].quantity
+    let purchase = purchases[indexPath.row]
     
-    cell.configure(with: item, quantity: quantity)
+    cell.configure(purchase)
     //        cell.onQuantityChange = { [weak self] newQuantity in
     //            self?.purchases[item] = newQuantity
     //            self?.tableView.reloadData()

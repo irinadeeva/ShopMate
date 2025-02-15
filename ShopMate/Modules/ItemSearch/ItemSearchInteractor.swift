@@ -50,6 +50,7 @@ class ItemSearchInteractor: ItemSearchInteractorInput {
 
   func fetchUpdatedItems() {
     let purchasedItems = PurchaseService.shared.getPurchases()
+
     self.presenter?.didFetchItems(purchasedItems)
   }
 

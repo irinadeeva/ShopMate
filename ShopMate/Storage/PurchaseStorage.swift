@@ -15,6 +15,7 @@ extension PurchaseStorage: PurchaseStorageProtocol {
   func storePurchase(_ purchase: Purchase) {
     let id = purchase.item.id
     purchases[id] = purchase
+    print(purchases[id])
   }
 
   func getPurchases() -> [Purchase] {
