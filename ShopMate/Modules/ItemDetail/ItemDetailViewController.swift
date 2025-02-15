@@ -20,7 +20,7 @@ final class ItemDetailViewController: UIViewController {
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+      label.textColor = .textColor
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         label.numberOfLines = 0
         return label
@@ -28,7 +28,7 @@ final class ItemDetailViewController: UIViewController {
 
     private let itemDescription: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = .textColor
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         return label

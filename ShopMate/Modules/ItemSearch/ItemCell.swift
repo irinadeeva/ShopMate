@@ -22,6 +22,17 @@ final class ItemCell: UICollectionViewCell {
     return label
   }()
 
+  private let addButton: UIButton = {
+    let button = UIButton(type: .system)
+    button.setTitle("+", for: .normal)
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+    button.backgroundColor = .systemBlue
+    button.setTitleColor(.white, for: .normal)
+    button.layer.cornerRadius = 6
+    button.layer.masksToBounds = true
+    return button
+  }()
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -48,7 +59,7 @@ final class ItemCell: UICollectionViewCell {
     contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
     contentView.layer.shadowRadius = 6
 
-    [imageView, titleLabel].forEach {
+    [imageView, titleLabel, addButton].forEach {
       contentView.addSubview($0)
       $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -62,7 +73,11 @@ final class ItemCell: UICollectionViewCell {
       titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 6),
       titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
       titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-      titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
+
+      addButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+      addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+      addButton.heightAnchor.constraint(equalToConstant: 30),
+      addButton.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
     ])
   }
 }

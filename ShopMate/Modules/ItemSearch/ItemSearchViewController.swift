@@ -98,7 +98,8 @@ private extension ItemSearchViewController {
           activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
           activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
 
-          suggestionsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+          //TODO: check if zero is okey here
+          suggestionsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
           suggestionsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
           suggestionsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
           suggestionsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -106,7 +107,7 @@ private extension ItemSearchViewController {
           emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
           emptyLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
 
-          itemsCollection.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+          itemsCollection.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
           itemsCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
           itemsCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
           itemsCollection.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -168,10 +169,6 @@ extension ItemSearchViewController: ItemSearchViewProtocol {
   }
 }
 
-
-
-
-
 extension ItemSearchViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
@@ -211,7 +208,7 @@ extension ItemSearchViewController: UICollectionViewDelegateFlowLayout {
         let cellWidth =  availableWidth / CGFloat(params.cellCount)
 
         return CGSize(width: cellWidth,
-                      height: 170)
+                      height: 350)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
