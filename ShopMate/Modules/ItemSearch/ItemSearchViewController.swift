@@ -187,14 +187,15 @@ extension ItemSearchViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
 
-      let item = purchases[indexPath.item].item
+      let purchase = purchases[indexPath.item]
 
-        let cachedImage = presenter?.getCachedImage(for: item.images)
+      let cachedImage = presenter?.getCachedImage(for:  purchase.item.images)
           if let imageData = cachedImage {
             cell.updateImage(with: imageData)
         }
 
-        cell.updateCell(with: item)
+        cell.updateCell(with: purchase)
+
         cell.delegate = self
         return cell
     }
@@ -294,9 +295,7 @@ extension ItemSearchViewController: ItemCellDelegate {
     purchases[indexPath.row].quantity = quality
     
     let purchase = purchases[indexPath.row]
-    
-    //TODO: work with quality + - 0
-    
+
     presenter?.addToCart(for: purchase)
   }
 }

@@ -39,8 +39,13 @@ final class ItemCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func updateCell(with item: Item) {
-    titleLabel.text = item.title
+  override func prepareForReuse() {
+    super.prepareForReuse()
+  }
+
+  func updateCell(with purchase: Purchase) {
+    titleLabel.text = purchase.item.title
+    quantitySelector.updateQuantity(purchase.quantity)
   }
 
   func updateImage(with data: Data) {

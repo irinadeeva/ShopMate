@@ -5,6 +5,7 @@ protocol PurchaseServiceProtocol {
   func storeItems(_ items: [Item])
   func getPurchases() -> [Purchase]
   func getPurchase(for id: Int) -> Purchase?
+  func deletePurchase(for id: Int)
 }
 
 final class PurchaseService {
@@ -35,8 +36,12 @@ extension PurchaseService: PurchaseServiceProtocol {
 
   func storeItems(_ items: [Item]) {
     for item in items {
-      storage.storePurchase(Purchase(item: item, quantity: 0))
+      storage.addNewPurchase(Purchase(item: item, quantity: 0))
     }
+  }
+
+  func deletePurchase(for id: Int) {
+    storage.deletePurchase(for: id)
   }
 }
 

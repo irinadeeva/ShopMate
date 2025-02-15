@@ -132,8 +132,9 @@ private extension ItemDetailViewController {
   @objc func didTapShareButton() {
     guard let item = purchase?.item else { return }
  
-    let textToShare = "\(item.title) - \(item.price)₽\n\(item.description)"
+    let textToShare = "\(item.title) - \(item.price)$\n\(item.description)"
     let activityVC = UIActivityViewController(activityItems: [textToShare], applicationActivities: nil)
+
     present(activityVC, animated: true)
   }
 

@@ -1,6 +1,6 @@
 import Foundation
 
-struct Category: Decodable, Hashable {
+struct Category: Codable, Hashable {
   let id: Int
   let name: String
   let image: String

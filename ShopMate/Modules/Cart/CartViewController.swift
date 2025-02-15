@@ -29,6 +29,12 @@ class CartViewController: UIViewController {
     initialize()
     presenter?.viewDidLoad()
   }
+
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+
+    presenter?.viewWillAppear()
+  }
 }
 
 // MARK: - Private functions
@@ -37,7 +43,7 @@ private extension CartViewController {
   func initialize() {
     view.backgroundColor = .background
     view.addSubview(tableView)
-//    tableView.frame = view.bounds
+
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
     
           NSLayoutConstraint.activate([
@@ -49,7 +55,15 @@ private extension CartViewController {
   }
   
   @objc private func shareTapped() {
-    //      presenter?.didTapShareButton()
+    let purchaseList = purchases.map { "\($0.quantity)x \($0.item.title)" }.joined(separator: "\n")
+
+        let activityViewController = UIActivityViewController(activityItems: [purchaseList], applicationActivities: nil)
+
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.barButtonItem = navigationItem.rightBarButtonItem
+        }
+
+        present(activityViewController, animated: true, completion: nil)
   }
 }
 
@@ -70,23 +84,41 @@ extension CartViewController: UITableViewDelegate, UITableViewDataSource {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: PurchaseItemCell.identifier, for: indexPath) as? PurchaseItemCell else {
       return UITableViewCell()
     }
-    
+
     let purchase = purchases[indexPath.row]
+
+    let cachedImage = presenter?.getCachedImage(for: purchase.item.images)
+      if let imageData = cachedImage {
+        cell.updateImage(with: imageData)
+    }
     
     cell.configure(purchase)
-    //        cell.onQuantityChange = { [weak self] newQuantity in
-    //            self?.purchases[item] = newQuantity
-    //            self?.tableView.reloadData()
-    //        }
-    //        cell.onRemove = { [weak self] in
-    //            self?.purchases.removeValue(forKey: item)
-    //            self?.tableView.reloadData()
-    //        }
-    
+    cell.delegate = self
+
     return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    //      presenter?.didSelectItem(purchases[indexPath.row])
+    let id = purchases[indexPath.row].item.id
+
+    presenter?.didSelectItem(id)
+  }
+}
+
+extension CartViewController: PurchaseItemCellDelegate {
+  func didTapDeleteButton(_ cell: PurchaseItemCell) {
+    guard let indexPath = tableView.indexPath(for: cell) else { return }
+
+    let id = purchases[indexPath.row].item.id
+    presenter?.didTapDeleteButton(id)
+  }
+  
+  func didTapAddButton(in cell: PurchaseItemCell, with quality: Int) {
+    guard let indexPath = tableView.indexPath(for: cell) else { return }
+    purchases[indexPath.row].quantity = quality
+
+    let purchase = purchases[indexPath.row]
+
+    presenter?.addToCart(for: purchase)
   }
 }

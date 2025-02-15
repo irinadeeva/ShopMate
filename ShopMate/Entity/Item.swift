@@ -1,6 +1,6 @@
 import Foundation
 
-struct Item: Decodable, Identifiable, Hashable {
+struct Item: Codable, Identifiable, Hashable {
   let id: Int
   let title: String
   let price: Int

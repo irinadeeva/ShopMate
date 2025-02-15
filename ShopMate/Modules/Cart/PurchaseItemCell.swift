@@ -1,7 +1,8 @@
 import UIKit
 
 protocol PurchaseItemCellDelegate: AnyObject {
-  func didTapDeleteButton()
+  func didTapDeleteButton(_ cell: PurchaseItemCell)
+  func didTapAddButton(in cell: PurchaseItemCell, with quality: Int)
 }
 
 final class PurchaseItemCell: UITableViewCell {
@@ -90,6 +91,11 @@ final class PurchaseItemCell: UITableViewCell {
       cartButton.heightAnchor.constraint(equalToConstant: 40),
       cartButton.widthAnchor.constraint(equalToConstant: 40)
     ])
+
+    quantitySelector.onQuantityChanged = { [weak self] quantity in
+      guard let self else { return }
+      delegate?.didTapAddButton(in: self, with: quantity)
+    }
   }
 
   func configure(_ purchaseItem: Purchase) {
@@ -100,18 +106,13 @@ final class PurchaseItemCell: UITableViewCell {
     titleLabel.text = item.title
     moneyLabel.text = "$\(item.price)"
     quantitySelector.updateQuantity(quantity)
-    if let imageUrl = item.images.first, let url = URL(string: imageUrl) {
-      DispatchQueue.global().async {
-        if let data = try? Data(contentsOf: url) {
-          DispatchQueue.main.async {
-            self.cardImageView.image = UIImage(data: data)
-          }
-        }
-      }
-    }
+  }
+
+  func updateImage(with data: Data) {
+    cardImageView.image = UIImage(data: data)
   }
 
   @objc private func didTapDeleteButton() {
-    delegate?.didTapDeleteButton()
+    delegate?.didTapDeleteButton(self)
   }
 }

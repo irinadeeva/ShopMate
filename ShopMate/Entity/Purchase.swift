@@ -1,6 +1,6 @@
 import Foundation
 
-struct Purchase {
+struct Purchase: Codable {
   let item: Item
   var quantity: Int
 }
