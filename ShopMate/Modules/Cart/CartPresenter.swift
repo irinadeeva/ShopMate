@@ -12,24 +12,24 @@ protocol CartPresenterProtocol: AnyObject {
 }
 
 class CartPresenter {
-    weak var view: CartViewProtocol?
-    var router: CartRouterProtocol
-    var interactor: CartInteractorInput
+  weak var view: CartViewProtocol?
+  var router: CartRouterProtocol
+  var interactor: CartInteractorInput
   private var state = CartState.initial {
     didSet {
       stateDidChanged()
     }
   }
-
+  
   init(interactor: CartInteractorInput, router: CartRouterProtocol) {
-        self.interactor = interactor
-        self.router = router
-    }
-
+    self.interactor = interactor
+    self.router = router
+  }
+  
   private func stateDidChanged() {
     switch state {
     case .initial:
-        //TODO: change
+      //TODO: change
       assertionFailure("can't move to initial state")
     case .loading:
       view?.showLoadingAndBlockUI()
@@ -43,16 +43,16 @@ class CartPresenter {
       view?.showError(errorModel)
     }
   }
-
+  
   private func makeErrorModel(_ error: Error) -> ErrorModel {
     let message: String
-
+    
     if let errorWithMessage = error as? ErrorWithMessage {
       message = errorWithMessage.message
     } else {
       message = "An unknown error occurred. Please try again later."
     }
-
+    
     let actionText = "Repeat"
     return ErrorModel(message: message,
                       actionText: actionText) { [weak self] in

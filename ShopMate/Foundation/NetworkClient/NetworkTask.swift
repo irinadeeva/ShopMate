@@ -1,13 +1,13 @@
 import Foundation
 
 protocol NetworkTask {
-    func cancel()
+  func cancel()
 }
 
 struct DefaultNetworkTask: NetworkTask {
-    let dataTask: URLSessionDataTask
-
-    func cancel() {
-        dataTask.cancel()
-    }
+  let dataTask: URLSessionDataTask
+  
+  func cancel() {
+    dataTask.cancel()
+  }
 }

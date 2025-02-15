@@ -18,9 +18,9 @@ final class QuantitySelectorView: UIView {
 
 
   init() {
-      super.init(frame: .zero)
-      setupViews()
-      updateView()
+    super.init(frame: .zero)
+    setupViews()
+    updateView()
   }
 
   required init?(coder: NSCoder) {
@@ -52,7 +52,7 @@ final class QuantitySelectorView: UIView {
     addButton.addTarget(self, action: #selector(increaseQuantity), for: .touchUpInside)
     addButton.setTitleColor(.white, for: .normal)
 
-    addItemButton.setTitle("Add to Shopping List", for: .normal)
+    addItemButton.setTitle("Add to Cart", for: .normal)
     addItemButton.addTarget(self, action: #selector(increaseQuantity), for: .touchUpInside)
     addItemButton.setTitleColor(.white, for: .normal)
 

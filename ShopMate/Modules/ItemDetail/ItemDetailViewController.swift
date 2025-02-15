@@ -117,7 +117,7 @@ private extension ItemDetailViewController {
       quantitySelector.heightAnchor.constraint(equalToConstant: 44)
     ])
 
-    // Реагируем на изменения количества
+
         quantitySelector.onQuantityChanged = { [weak self] quantity in
           self?.purchase?.quantity = quantity
           guard let purchase = self?.purchase else { return }

@@ -9,10 +9,10 @@ protocol CartInteractorOutput: AnyObject {
 
 class CartInteractor: CartInteractorInput {
   weak var presenter: CartInteractorOutput?
-
+  
   func fetchPurchases() {
     let purchases = PurchaseService.shared.getPurchaseInCart()
-
+    
     presenter?.didFetchPurchases(purchases)
   }
 }

@@ -85,7 +85,7 @@ struct DefaultNetworkClient: NetworkClient {
         onResponse(.failure(NetworkClientError.httpStatusCode(response.statusCode)))
         return
       }
-
+      
       if let data = data {
         onResponse(.success(data))
         return
@@ -121,22 +121,22 @@ struct DefaultNetworkClient: NetworkClient {
   }
   
   private func create(request: NetworkRequest) -> URLRequest? {
-
+    
     guard var urlComponents = URLComponents(string: request.endpoint) else { return nil }
     
     if !request.queryItems.isEmpty {
       urlComponents.queryItems = request.queryItems
     }
-
+    
     guard let url = urlComponents.url else { return nil }
-
+    
     var urlRequest = URLRequest(url: url)
     
     urlRequest.httpMethod = request.httpMethod.rawValue
-
+    
     return urlRequest
   }
-
+  
   private func parse<T: Decodable>(data: Data, type _: T.Type, onResponse: @escaping (Result<T, Error>) -> Void) {
     do {
       let response = try decoder.decode(T.self, from: data)

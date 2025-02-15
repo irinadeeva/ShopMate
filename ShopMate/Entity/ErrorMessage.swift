@@ -1,5 +1,5 @@
 import Foundation
 
 protocol ErrorWithMessage {
-    var message: String { get }
+  var message: String { get }
 }
