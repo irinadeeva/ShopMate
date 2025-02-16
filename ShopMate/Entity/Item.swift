@@ -7,13 +7,13 @@ struct Item: Codable, Identifiable, Hashable {
   let description: String
   var images: [String]
   let category: Category
-
+  
   static func cleanImages(_ images: [String]) -> [String] {
-      return images.map {
-          $0.replacingOccurrences(of: "[", with: "")
-            .replacingOccurrences(of: "]", with: "")
-            .replacingOccurrences(of: "\\", with: "")
-            .trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-      }
+    return images.map {
+      $0.replacingOccurrences(of: "[", with: "")
+        .replacingOccurrences(of: "]", with: "")
+        .replacingOccurrences(of: "\\", with: "")
+        .trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+    }
   }
 }

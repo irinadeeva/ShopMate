@@ -7,13 +7,13 @@ protocol SearchHistoryServiceProtocol {
 final class SearchHistoryService {
   static let shared = SearchHistoryService()
   private var searchHistory: [String] = [] {
-      didSet {
-          if searchHistory.count > 5 {
-              searchHistory.removeFirst()
-          }
+    didSet {
+      if searchHistory.count > 5 {
+        searchHistory.removeFirst()
       }
+    }
   }
-
+  
   private init() {}
 }
 

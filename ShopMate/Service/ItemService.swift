@@ -9,14 +9,14 @@ final class ItemService {
   static let shared = ItemService()
   private let networkClient = DefaultNetworkClient()
   private let storage = ItemsStorage()
-
+  
   private init() {}
 }
 
 extension ItemService: ItemServiceProtocol {
   func fetchItems(for offset: Int, searchText: String, priceMax: Int?, categoryId: Int?, completion: @escaping ItemsCompletion) {
     let request = ItemRequest(offset: offset, searchText: searchText, priceMax: priceMax, categoryId: categoryId)
-
+    
     networkClient.send(request: request, type: [Item].self) { result in
       switch result {
       case .success(let data):
@@ -28,7 +28,7 @@ extension ItemService: ItemServiceProtocol {
       }
     }
   }
-
+  
   func fetchItem(for id: Int) -> Item? {
     storage.getItem(with: id)
   }

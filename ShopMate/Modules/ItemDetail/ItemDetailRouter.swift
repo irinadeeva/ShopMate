@@ -3,8 +3,8 @@ protocol ItemDetailRouterProtocol {
 }
 
 final class ItemDetailRouter: ItemDetailRouterProtocol {
-    weak var viewController: ItemDetailViewController?
-
+  weak var viewController: ItemDetailViewController?
+  
   func navigateBack() {
     viewController?.navigationController?.popViewController(animated: true)
   }

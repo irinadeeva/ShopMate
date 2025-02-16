@@ -20,21 +20,21 @@ final class CartInteractor: CartInteractorInput {
     
     presenter?.didFetchPurchases(purchases)
   }
-
+  
   func detetePurchase(_ id: Int) {
     PurchaseService.shared.deletePurchase(for: id)
-
+    
     fetchPurchases()
   }
-
+  
   func fetchItemFirstImage(for url: String) -> Data? {
     let data = ImageCacheService.shared.getImage(for: url)
     return data
   }
-
+  
   func addToCart(for purchase: Purchase) {
     PurchaseService.shared.storePurchase(purchase)
-
+    
     if purchase.quantity == 0 {
       fetchPurchases()
     }

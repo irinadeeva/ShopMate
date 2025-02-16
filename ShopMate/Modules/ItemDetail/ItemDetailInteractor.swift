@@ -13,31 +13,31 @@ protocol ItemDetailInteractorOutput: AnyObject {
 
 final class ItemDetailInteractor: ItemDetailInteractorInput {
   weak var presenter: ItemDetailInteractorOutput?
-
+  
   func fetchItem(with id: Int) {
     let purchasedItem = PurchaseService.shared.getPurchase(for: id)
-
+    
     if let purchasedItem  {
       presenter?.didFetchItem(purchasedItem)
     }
   }
-
+  
   func fetchCachedImage(for images: [String]) -> [Data] {
     var datas: [Data] = []
-
+    
     for image in images {
       if let data = ImageCacheService.shared.getImage(for: image) {
         datas.append(data)
       }
     }
-
+    
     return datas
   }
-
+  
   func addToCart(_ purchase: Purchase) {
     PurchaseService.shared.storePurchase(purchase)
   }
-
+  
   private func cacheImages(for item: Item) {
     let images = item.images
     for image in images {

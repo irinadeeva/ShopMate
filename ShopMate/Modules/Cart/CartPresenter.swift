@@ -67,27 +67,27 @@ extension CartPresenter: CartPresenterProtocol {
   func viewDidLoad() {
     state = .loading
   }
-
+  
   func viewWillAppear() {
     state = .loading
   }
-
+  
   func didTapDeleteButton(_ id: Int) {
     interactor.detetePurchase(id)
   }
-
+  
   func getCachedImage(for images: [String]) -> Data? {
     if let firstImageUrlString = images.first {
       return interactor.fetchItemFirstImage(for: firstImageUrlString)
     }
-
+    
     return nil
   }
-
+  
   func addToCart(for purchase: Purchase) {
     interactor.addToCart(for: purchase)
   }
-
+  
   func didSelectItem(_ id: Int) {
     router.navigateToItemDetail(for: id)
   }

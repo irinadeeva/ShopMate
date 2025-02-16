@@ -28,10 +28,10 @@ final class CartViewController: UIViewController {
     initialize()
     presenter?.viewDidLoad()
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-
+    
     presenter?.viewWillAppear()
   }
 }
@@ -42,27 +42,27 @@ private extension CartViewController {
   func initialize() {
     view.backgroundColor = .background
     view.addSubview(tableView)
-
+    
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
     
-          NSLayoutConstraint.activate([
-              tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-              tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-              tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-              tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-          ])
+    NSLayoutConstraint.activate([
+      tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+      tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+    ])
   }
   
   @objc private func shareTapped() {
     let purchaseList = purchases.map { "\($0.quantity)x \($0.item.title)" }.joined(separator: "\n")
-
-        let activityViewController = UIActivityViewController(activityItems: [purchaseList], applicationActivities: nil)
-
-        if let popoverController = activityViewController.popoverPresentationController {
-            popoverController.barButtonItem = navigationItem.rightBarButtonItem
-        }
-
-        present(activityViewController, animated: true, completion: nil)
+    
+    let activityViewController = UIActivityViewController(activityItems: [purchaseList], applicationActivities: nil)
+    
+    if let popoverController = activityViewController.popoverPresentationController {
+      popoverController.barButtonItem = navigationItem.rightBarButtonItem
+    }
+    
+    present(activityViewController, animated: true, completion: nil)
   }
 }
 
@@ -83,23 +83,23 @@ extension CartViewController: UITableViewDelegate, UITableViewDataSource {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: PurchaseItemCell.identifier, for: indexPath) as? PurchaseItemCell else {
       return UITableViewCell()
     }
-
+    
     let purchase = purchases[indexPath.row]
-
+    
     let cachedImage = presenter?.getCachedImage(for: purchase.item.images)
-      if let imageData = cachedImage {
-        cell.updateImage(with: imageData)
+    if let imageData = cachedImage {
+      cell.updateImage(with: imageData)
     }
     
     cell.configure(purchase)
     cell.delegate = self
-
+    
     return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let id = purchases[indexPath.row].item.id
-
+    
     presenter?.didSelectItem(id)
   }
 }
@@ -107,7 +107,7 @@ extension CartViewController: UITableViewDelegate, UITableViewDataSource {
 extension CartViewController: PurchaseItemCellDelegate {
   func didTapDeleteButton(_ cell: PurchaseItemCell) {
     guard let indexPath = tableView.indexPath(for: cell) else { return }
-
+    
     let id = purchases[indexPath.row].item.id
     presenter?.didTapDeleteButton(id)
   }
@@ -115,9 +115,9 @@ extension CartViewController: PurchaseItemCellDelegate {
   func didTapAddButton(in cell: PurchaseItemCell, with quality: Int) {
     guard let indexPath = tableView.indexPath(for: cell) else { return }
     purchases[indexPath.row].quantity = quality
-
+    
     let purchase = purchases[indexPath.row]
-
+    
     presenter?.addToCart(for: purchase)
   }
 }

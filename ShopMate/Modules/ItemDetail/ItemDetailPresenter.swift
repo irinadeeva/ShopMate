@@ -12,22 +12,22 @@ protocol ItemDetailPresenterProtocol: AnyObject {
 }
 
 final class ItemDetailPresenter {
-    weak var view: ItemDetailViewProtocol?
-    var router: ItemDetailRouterProtocol
-    var interactor: ItemDetailInteractorInput
+  weak var view: ItemDetailViewProtocol?
+  var router: ItemDetailRouterProtocol
+  var interactor: ItemDetailInteractorInput
   let id: Int
   private var state: ItemDetailState = .initial {
     didSet {
       stateDidChanged()
     }
   }
-
-    init(interactor: ItemDetailInteractorInput, router: ItemDetailRouterProtocol, id: Int) {
-        self.interactor = interactor
-        self.router = router
-      self.id = id
-    }
-
+  
+  init(interactor: ItemDetailInteractorInput, router: ItemDetailRouterProtocol, id: Int) {
+    self.interactor = interactor
+    self.router = router
+    self.id = id
+  }
+  
   private func stateDidChanged() {
     switch state {
     case .initial:
@@ -44,16 +44,16 @@ final class ItemDetailPresenter {
       view?.showError(errorModel)
     }
   }
-
+  
   private func makeErrorModel(_ error: Error) -> ErrorModel {
     let message: String
-
+    
     if let errorWithMessage = error as? ErrorWithMessage {
       message = errorWithMessage.message
     } else {
       message = "An unknown error occurred. Please try again later."
     }
-
+    
     let actionText = "Repeat"
     return ErrorModel(message: message,
                       actionText: actionText) { [weak self] in
@@ -66,15 +66,15 @@ extension ItemDetailPresenter: ItemDetailPresenterProtocol {
   func viewDidLoad() {
     state = .loading
   }
-
+  
   func getCachedImage(for images: [String]) -> [Data] {
     return interactor.fetchCachedImage(for: images)
   }
-
+  
   func navigateBack() {
     router.navigateBack()
   }
-
+  
   func addToCart(_ purchase: Purchase) {
     interactor.addToCart(purchase)
   }
