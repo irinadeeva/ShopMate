@@ -21,7 +21,16 @@ extension PurchaseService: PurchaseServiceProtocol {
     let sortedPurchases = purchases.sorted { $0.item.id < $1.item.id }
     return sortedPurchases
   }
-  
+
+  func getPurchases(for searchText: String) -> [Purchase] {
+    let purchases = storage.getPurchases()
+    let sortedPurchases = purchases.sorted { $0.item.id < $1.item.id }
+    let filteredPurchases = sortedPurchases.filter {
+      $0.item.title.lowercased().contains(searchText.lowercased())
+    }
+    return filteredPurchases
+  }
+
   func getPurchase(for id: Int) -> Purchase? {
     storage.getPurchase(for: id)
   }

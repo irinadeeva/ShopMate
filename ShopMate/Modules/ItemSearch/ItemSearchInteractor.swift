@@ -1,45 +1,69 @@
 import Foundation
 
 protocol ItemSearchInteractorInput: AnyObject {
-  func fetchItems(for offset: Int)
+  func fetchItems(for offset: Int, searchText: String)
   func fetchItemFirstImage(for url: String) -> Data?
   func addToCart(for purchase: Purchase)
-  func fetchUpdatedItems()
+  func fetchUpdatedItems(_ searchText: String)
+  func fetchSearchHistory() -> [String]
 }
-
-//protocol TaskListInteractorInput: AnyObject {
-//  func fetchTasks()
-//  func updateTaskItem(_ taskItem: TaskItem)
-//  func deleteTaskItem(_ taskItem: TaskItem)
-//}
 
 protocol ItemSearchInteractorOutput: AnyObject {
   func didFetchItems(_ purchases: [Purchase])
-  //  func didFetchItemImage(_ data: Data?)
-  //  func didFetchTask(_ task: TaskItem)
-  //  func didFetchId(_ taskId: UUID)
   func didFailToFetchItems(with error: Error)
 }
 
 final class ItemSearchInteractor: ItemSearchInteractorInput {
   weak var presenter: ItemSearchInteractorOutput?
 
-  func fetchItems(for offset: Int) {
-    ItemService.shared.fetchItems(for: offset) { [weak self] result in
+  func fetchItems(for offset: Int, searchText: String) {
+
+    if searchText.isEmpty {
+      fetchRandomItems(for: offset, searchText: searchText)
+    } else {
+      fetchSearchedItems(for: offset, searchText: searchText)
+    }
+  }
+
+  private func fetchRandomItems(for offset: Int, searchText: String) {
+    ItemService.shared.fetchItems(for: offset, searchText: searchText) { [weak self] result in
       guard let self else { return }
       switch result {
       case .success(var items):
-        //TODO: вынести это
+
         for i in 0..<items.count {
-          items[i].images = items[i].images
-            .map { $0.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "").replacingOccurrences(of: "\\", with: "") }
-            .map { $0.trimmingCharacters(in: CharacterSet(charactersIn: "\"")) }
+          items[i].images = Item.cleanImages( items[i].images)
         }
 
         cacheFirstImage(for: items)
         addToPurchase(for: items)
 
         let purchasedItems = PurchaseService.shared.getPurchases()
+        self.presenter?.didFetchItems(purchasedItems)
+      case .failure(let error):
+        self.presenter?.didFailToFetchItems(with: error)
+      }
+    }
+  }
+
+  private func fetchSearchedItems(for offset: Int, searchText: String) {
+    ItemService.shared.fetchItems(for: offset, searchText: searchText) { [weak self] result in
+      guard let self else { return }
+      switch result {
+      case .success(var items):
+
+        for i in 0..<items.count {
+          items[i].images = Item.cleanImages( items[i].images)
+        }
+
+        cacheFirstImage(for: items)
+        addToPurchase(for: items)
+
+        let purchasedItems = PurchaseService.shared.getPurchases(for: searchText)
+
+        if !searchText.isEmpty {
+          SearchHistoryService.shared.appendSearchHistory(searchText)
+        }
 
         self.presenter?.didFetchItems(purchasedItems)
       case .failure(let error):
@@ -48,8 +72,13 @@ final class ItemSearchInteractor: ItemSearchInteractorInput {
     }
   }
 
-  func fetchUpdatedItems() {
-    let purchasedItems = PurchaseService.shared.getPurchases()
+  func fetchUpdatedItems(_ searchText: String) {
+    var purchasedItems: [Purchase] = []
+    if searchText.isEmpty {
+      purchasedItems = PurchaseService.shared.getPurchases()
+    } else {
+      purchasedItems = PurchaseService.shared.getPurchases(for: searchText)
+    }
 
     self.presenter?.didFetchItems(purchasedItems)
   }
@@ -74,5 +103,9 @@ final class ItemSearchInteractor: ItemSearchInteractorInput {
 
   private func addToPurchase(for items: [Item]) {
     PurchaseService.shared.storeItems(items)
+  }
+
+  func fetchSearchHistory() -> [String] {
+    SearchHistoryService.shared.getSearchHistory()
   }
 }

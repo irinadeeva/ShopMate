@@ -8,6 +8,8 @@ protocol ItemSearchPresenterProtocol: AnyObject {
   func showDetails(of id: Int)
   func showCart()
   func addToCart(for purchase: Purchase)
+  func fetchHints() -> [String]
+  func fetchItemsFor(_ text: String)
 }
 
 // MARK: - State
@@ -22,6 +24,7 @@ final class ItemSearchPresenter {
   var interactor: ItemSearchInteractorInput
   private var imageCache = NSCache<NSString, NSData>()
   private var lastOffset: Int = 0
+  private var searchText: String = ""
   private var state = ItemSearchDetailState.initial {
     didSet {
       stateDidChanged()
@@ -40,10 +43,10 @@ final class ItemSearchPresenter {
           assertionFailure("can't move to initial state")
       case .loading:
         view?.showLoadingAndBlockUI()
-        interactor.fetchItems(for: lastOffset)
+        interactor.fetchItems(for: lastOffset, searchText: searchText)
       case .updating:
         view?.showLoadingAndBlockUI()
-        interactor.fetchUpdatedItems()
+        interactor.fetchUpdatedItems(searchText)
       case .data(let items):
         view?.fetchItems(items)
         view?.hideLoadingAndUnblockUI()
@@ -105,6 +108,16 @@ extension ItemSearchPresenter: ItemSearchPresenterProtocol {
 
   func addToCart(for purchase: Purchase) {
     interactor.addToCart(for: purchase)
+  }
+
+  func fetchHints() -> [String] {
+    interactor.fetchSearchHistory()
+  }
+
+  func fetchItemsFor(_ text: String) {
+    lastOffset = 0
+    searchText = text
+    state = .loading
   }
 }
 

@@ -19,7 +19,7 @@ final class PurchaseStorage {
 
   private func savePurchases() {
       let filteredPurchases = purchases.filter { $0.value.quantity > 0 }
-    print(filteredPurchases)
+
       if let encoded = try? JSONEncoder().encode(filteredPurchases) {
           UserDefaults.standard.set(encoded, forKey: storageKey)
       }
@@ -30,7 +30,6 @@ final class PurchaseStorage {
          let decoded = try? JSONDecoder().decode([Int: Purchase].self, from: savedData) {
           purchases = decoded
       }
-    print(purchases)
   }
 
 }

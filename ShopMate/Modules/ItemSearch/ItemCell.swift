@@ -83,10 +83,6 @@ final class ItemCell: UICollectionViewCell {
     ])
 
     quantitySelector.onQuantityChanged = { [weak self] quantity in
-      //      self?.purchase?.quantity = quantity
-      //      guard let purchase = self?.purchase else { return }
-      //      self?.presenter?.addToCart(purchase)
-
       guard let self else { return }
       delegate?.didTapAddButton(in: self, with: quantity)
     }

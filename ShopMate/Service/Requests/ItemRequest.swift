@@ -9,8 +9,11 @@ struct ItemRequest: NetworkRequest {
   
   var queryItems: [URLQueryItem] {
     [URLQueryItem(name: "offset", value: String(offset)),
-     URLQueryItem(name: "limit", value: String(10))]
+     URLQueryItem(name: "limit", value: String(10)),
+    URLQueryItem(name: "title", value: searchText)]
   }
   
   let offset: Int
+
+  let searchText: String
 }
