@@ -1,18 +1,21 @@
 import UIKit
 
 protocol FilterDelegate: AnyObject {
-    func didApplyFilters(title: String?, price: Double?, priceMin: Double?, priceMax: Double?, categoryId: Int?)
+  func didApplyFilters(priceMax: Int?, categoryId: Int?)
 }
 
 class FilterBottomSheetViewController: UIViewController {
     weak var delegate: FilterDelegate?
 
-    private let titleTextField = UITextField()
-    private let priceTextField = UITextField()
-    private let priceMinTextField = UITextField()
-    private let priceMaxTextField = UITextField()
-    private let categoryTextField = UITextField()
+    private let priceRangeLabel = UILabel()
+    private let priceSlider = UISlider()
+    private let categoryPicker = UIPickerView()
     private let applyButton = UIButton()
+
+    var categories: [Category] = []
+    private var selectedCategoryIndex: Int?
+    private var minPrice: Double = 0
+    private var maxPrice: Double = 100
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,17 +26,23 @@ class FilterBottomSheetViewController: UIViewController {
         view.backgroundColor = .white
         view.layer.cornerRadius = 16
 
-        titleTextField.placeholder = "Title"
-        priceTextField.placeholder = "Price"
-        priceMinTextField.placeholder = "Min Price"
-        priceMaxTextField.placeholder = "Max Price"
-        categoryTextField.placeholder = "Category ID"
+        priceRangeLabel.text = "Price: $\(Int(minPrice))"
+        priceRangeLabel.textAlignment = .center
+
+        priceSlider.minimumValue = Float(minPrice)
+        priceSlider.maximumValue = Float(maxPrice)
+        priceSlider.value = Float(minPrice)
+        priceSlider.addTarget(self, action: #selector(priceChanged), for: .valueChanged)
+
+        categoryPicker.delegate = self
+        categoryPicker.dataSource = self
 
         applyButton.setTitle("Apply Filters", for: .normal)
         applyButton.backgroundColor = .systemBlue
+        applyButton.layer.cornerRadius = 8
         applyButton.addTarget(self, action: #selector(applyFilters), for: .touchUpInside)
 
-        let stackView = UIStackView(arrangedSubviews: [titleTextField, priceTextField, priceMinTextField, priceMaxTextField, categoryTextField, applyButton])
+        let stackView = UIStackView(arrangedSubviews: [priceRangeLabel, priceSlider, categoryPicker, applyButton])
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -48,14 +57,36 @@ class FilterBottomSheetViewController: UIViewController {
         ])
     }
 
-    @objc private func applyFilters() {
-        let title = titleTextField.text?.isEmpty == true ? nil : titleTextField.text
-        let price = Double(priceTextField.text ?? "")
-        let priceMin = Double(priceMinTextField.text ?? "")
-        let priceMax = Double(priceMaxTextField.text ?? "")
-        let categoryId = Int(categoryTextField.text ?? "")
+    @objc private func priceChanged() {
+        priceRangeLabel.text = "Price: $\(Int(priceSlider.value))"
+    }
 
-        delegate?.didApplyFilters(title: title, price: price, priceMin: priceMin, priceMax: priceMax, categoryId: categoryId)
+    @objc private func applyFilters() {
+      var priceMax: Int? = Int(priceSlider.value)
+      if priceMax == 0 {
+        priceMax = nil
+      }
+
+      guard let selectedCategoryIndex = selectedCategoryIndex else { return }
+      let categoryId = categories[selectedCategoryIndex].id
+
+      delegate?.didApplyFilters(priceMax: priceMax, categoryId: categoryId)
         dismiss(animated: true)
+    }
+}
+
+extension FilterBottomSheetViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int { return 1 }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return categories.count
+    }
+
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+      return categories[row].name
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selectedCategoryIndex = row
     }
 }

@@ -6,6 +6,7 @@ protocol PurchaseServiceProtocol {
   func getPurchases() -> [Purchase]
   func getPurchase(for id: Int) -> Purchase?
   func deletePurchase(for id: Int)
+  func getPurchases(priceMax: Int?, categoryId: Int?) -> [Purchase]
 }
 
 final class PurchaseService {
@@ -28,6 +29,19 @@ extension PurchaseService: PurchaseServiceProtocol {
     let filteredPurchases = sortedPurchases.filter {
       $0.item.title.lowercased().contains(searchText.lowercased())
     }
+    return filteredPurchases
+  }
+
+  func getPurchases(priceMax: Int?, categoryId: Int?) -> [Purchase] {
+    let purchases = storage.getPurchases()
+    let sortedPurchases = purchases.sorted { $0.item.id < $1.item.id }
+
+    let filteredPurchases = sortedPurchases.filter { purchase in
+      let matchesCategory = categoryId == nil || purchase.item.category.id == categoryId!
+        let matchesPrice = priceMax == nil || purchase.item.price <= priceMax!
+        return matchesPrice && matchesCategory
+    }
+
     return filteredPurchases
   }
 

@@ -10,6 +10,8 @@ protocol ItemSearchPresenterProtocol: AnyObject {
   func addToCart(for purchase: Purchase)
   func fetchHints() -> [String]
   func fetchItemsFor(_ text: String)
+  func fetchFilteredItemsFor(priceMax: Int?, categoryId: Int?)
+  func fetchCategory()
 }
 
 // MARK: - State
@@ -25,6 +27,8 @@ final class ItemSearchPresenter {
   private var imageCache = NSCache<NSString, NSData>()
   private var lastOffset: Int = 0
   private var searchText: String = ""
+  private var priceMax: Int?
+  private var categoryId: Int?
   private var state = ItemSearchDetailState.initial {
     didSet {
       stateDidChanged()
@@ -43,10 +47,10 @@ final class ItemSearchPresenter {
           assertionFailure("can't move to initial state")
       case .loading:
         view?.showLoadingAndBlockUI()
-        interactor.fetchItems(for: lastOffset, searchText: searchText)
+        interactor.fetchItems(for: lastOffset, searchText: searchText, priceMax: priceMax, categoryId: categoryId)
       case .updating:
         view?.showLoadingAndBlockUI()
-        interactor.fetchUpdatedItems(searchText)
+        interactor.fetchUpdatedItems(searchText, priceMax: priceMax, categoryId: categoryId)
       case .data(let items):
         view?.fetchItems(items)
         view?.hideLoadingAndUnblockUI()
@@ -119,6 +123,17 @@ extension ItemSearchPresenter: ItemSearchPresenterProtocol {
     searchText = text
     state = .loading
   }
+
+  func fetchFilteredItemsFor(priceMax: Int?, categoryId: Int?) {
+    lastOffset = 0
+    self.priceMax = priceMax
+    self.categoryId = categoryId
+    state = .loading
+  }
+
+  func fetchCategory() {
+    interactor.fetchCategory()
+  }
 }
 
 extension ItemSearchPresenter: ItemSearchInteractorOutput {
@@ -128,5 +143,9 @@ extension ItemSearchPresenter: ItemSearchInteractorOutput {
   
   func didFailToFetchItems(with error: any Error) {
     state = .failed(error)
+  }
+
+  func didFetchCategories(_ categories: [Category]) {
+    view?.fetchCategories(categories)
   }
 }

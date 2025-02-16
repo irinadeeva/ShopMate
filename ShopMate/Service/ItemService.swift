@@ -1,7 +1,7 @@
 typealias ItemsCompletion = (Result<[Item], Error>) -> Void
 
 protocol ItemServiceProtocol {
-  func fetchItems(for offset: Int, searchText: String, completion: @escaping ItemsCompletion)
+  func fetchItems(for offset: Int, searchText: String, priceMax: Int?, categoryId: Int?, completion: @escaping ItemsCompletion)
   func fetchItem(for id: Int) -> Item?
 }
 
@@ -14,10 +14,8 @@ final class ItemService {
 }
 
 extension ItemService: ItemServiceProtocol {
-  func fetchItems(for offset: Int, searchText: String, completion: @escaping ItemsCompletion) {
-    let request = ItemRequest(offset: offset, searchText: searchText)
-
-    print(request)
+  func fetchItems(for offset: Int, searchText: String, priceMax: Int?, categoryId: Int?, completion: @escaping ItemsCompletion) {
+    let request = ItemRequest(offset: offset, searchText: searchText, priceMax: priceMax, categoryId: categoryId)
 
     networkClient.send(request: request, type: [Item].self) { result in
       switch result {

@@ -2,6 +2,7 @@ import UIKit
 
 protocol ItemSearchViewProtocol: AnyObject, ErrorView, LoadingView {
   func fetchItems(_ purchases: [Purchase])
+  func fetchCategories(_ categories: [Category])
 }
 
 class ItemSearchViewController: UIViewController {
@@ -21,6 +22,7 @@ class ItemSearchViewController: UIViewController {
     searchController.searchBar.placeholder = "Search"
     return searchController
   }()
+  private var filterVC: FilterBottomSheetViewController?
 
   private lazy var itemsCollection: UICollectionView = {
     let collectionView = UICollectionView(
@@ -164,15 +166,7 @@ private extension ItemSearchViewController {
   }
 
   @objc private func openFilters() {
-
-
-    let filterVC = FilterBottomSheetViewController()
-    filterVC.delegate = self
-    filterVC.modalPresentationStyle = .pageSheet
-    if let sheet = filterVC.presentationController as? UISheetPresentationController {
-      sheet.detents = [.medium()]
-    }
-    present(filterVC, animated: true)
+    presenter?.fetchCategory()
   }
 }
 
@@ -192,6 +186,18 @@ extension ItemSearchViewController: ItemSearchViewProtocol {
       suggestionsTableView.isHidden = true
       itemsCollection.isHidden = true
     }
+  }
+
+  func fetchCategories(_ categories: [Category]) {
+    filterVC = FilterBottomSheetViewController()
+    guard let filterVC = filterVC else { return }
+    filterVC.categories = categories
+    filterVC.delegate = self
+    filterVC.modalPresentationStyle = .pageSheet
+    if let sheet = filterVC.presentationController as? UISheetPresentationController {
+      sheet.detents = [.medium()]
+    }
+    present(filterVC, animated: true)
   }
 }
 
@@ -329,16 +335,18 @@ extension ItemSearchViewController: ItemCellDelegate {
 }
 
 extension ItemSearchViewController: FilterDelegate {
-  func didApplyFilters(title: String?, price: Double?, priceMin: Double?, priceMax: Double?, categoryId: Int?) {
+  func didApplyFilters(priceMax: Int?, categoryId: Int?) {
     var queryParams = [String]()
-    if let title = title { queryParams.append("title=\(title)") }
-    if let price = price { queryParams.append("price=\(price)") }
-    if let priceMin = priceMin { queryParams.append("price_min=\(priceMin)") }
+
     if let priceMax = priceMax { queryParams.append("price_max=\(priceMax)") }
     if let categoryId = categoryId { queryParams.append("categoryId=\(categoryId)") }
 
     let queryString = queryParams.joined(separator: "&")
     let urlString = "https://api.escuelajs.co/api/v1/products/?\(queryString)"
-    print("Fetching products from: \(urlString)")
+    print("Fetching products from: \(urlString) \(categoryId)")
+
+
+    presenter?.fetchFilteredItemsFor(priceMax: priceMax, categoryId: categoryId)
   }
+
 }
