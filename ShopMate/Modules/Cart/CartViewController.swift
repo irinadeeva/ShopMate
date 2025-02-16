@@ -114,10 +114,9 @@ extension CartViewController: PurchaseItemCellDelegate {
   
   func didTapAddButton(in cell: PurchaseItemCell, with quality: Int) {
     guard let indexPath = tableView.indexPath(for: cell) else { return }
+
     purchases[indexPath.row].quantity = quality
-    
     let purchase = purchases[indexPath.row]
-    
     presenter?.addToCart(for: purchase)
   }
 }

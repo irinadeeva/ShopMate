@@ -66,10 +66,12 @@ final class FilterBottomSheetViewController: UIViewController {
     if priceMax == 0 {
       priceMax = nil
     }
-    
-    guard let selectedCategoryIndex = selectedCategoryIndex else { return }
-    let categoryId = categories[selectedCategoryIndex].id
-    
+
+    var categoryId = selectedCategoryIndex
+    if let selectedCategoryIndex = selectedCategoryIndex {
+      categoryId = categories[selectedCategoryIndex].id
+    }
+
     delegate?.didApplyFilters(priceMax: priceMax, categoryId: categoryId)
     dismiss(animated: true)
   }

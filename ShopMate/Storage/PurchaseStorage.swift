@@ -31,7 +31,6 @@ final class PurchaseStorage {
       purchases = decoded
     }
   }
-  
 }
 
 extension PurchaseStorage: PurchaseStorageProtocol {

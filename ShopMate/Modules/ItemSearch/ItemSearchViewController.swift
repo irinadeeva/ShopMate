@@ -336,5 +336,4 @@ extension ItemSearchViewController: FilterDelegate {
   func didApplyFilters(priceMax: Int?, categoryId: Int?) {
     presenter?.fetchFilteredItemsFor(priceMax: priceMax, categoryId: categoryId)
   }
-  
 }

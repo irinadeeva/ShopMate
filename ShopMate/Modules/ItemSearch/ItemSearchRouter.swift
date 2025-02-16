@@ -15,5 +15,4 @@ final class ItemSearchRouter: ItemSearchRouterProtocol {
     let cartViewController = CartModuleBuilder.build()
     viewController?.navigationController?.pushViewController(cartViewController, animated: true)
   }
-  
 }

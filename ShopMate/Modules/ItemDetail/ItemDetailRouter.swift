@@ -8,5 +8,4 @@ final class ItemDetailRouter: ItemDetailRouterProtocol {
   func navigateBack() {
     viewController?.navigationController?.popViewController(animated: true)
   }
-  
 }

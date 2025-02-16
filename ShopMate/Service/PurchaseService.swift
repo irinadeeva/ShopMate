@@ -67,5 +67,3 @@ extension PurchaseService: PurchaseServiceProtocol {
     storage.deletePurchase(for: id)
   }
 }
-
-

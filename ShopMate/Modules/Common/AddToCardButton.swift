@@ -16,7 +16,6 @@ final class QuantitySelectorView: UIView {
   private let quantityLabel = UILabel()
   private let addItemButton = UIButton(type: .system)
   
-  
   init() {
     super.init(frame: .zero)
     setupViews()
