@@ -65,6 +65,15 @@ class ItemSearchViewController: UIViewController {
     return button
   }()
 
+  private lazy var filterButton: UIBarButtonItem = {
+    let button = UIBarButtonItem(
+      image: UIImage(systemName: "arrow.left.arrow.right"),
+      style: .plain,
+      target: self,
+      action: #selector(openFilters)
+    )
+    return button
+  }()
 
   // MARK: - View lifecycle
   override func viewDidLoad() {
@@ -127,7 +136,7 @@ private extension ItemSearchViewController {
     searchController.searchResultsUpdater = self
     navigationItem.searchController = searchController
 
-    navigationItem.rightBarButtonItem = cartButton
+    navigationItem.setRightBarButtonItems([cartButton, filterButton], animated: true)
   }
 
   func updateSuggestions(for query: String) {
@@ -152,6 +161,18 @@ private extension ItemSearchViewController {
 
   @objc func cartButtonTapped() {
     presenter?.showCart()
+  }
+
+  @objc private func openFilters() {
+
+
+    let filterVC = FilterBottomSheetViewController()
+    filterVC.delegate = self
+    filterVC.modalPresentationStyle = .pageSheet
+    if let sheet = filterVC.presentationController as? UISheetPresentationController {
+      sheet.detents = [.medium()]
+    }
+    present(filterVC, animated: true)
   }
 }
 
@@ -272,7 +293,7 @@ extension ItemSearchViewController: UISearchBarDelegate {
 
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     searchBar.text = ""
-    searchBar.resignFirstResponder() // Закрытие клавиатуры
+    searchBar.resignFirstResponder() 
 
     itemsCollection.isHidden = false
     presenter?.fetchItemsFor("")
@@ -304,5 +325,20 @@ extension ItemSearchViewController: ItemCellDelegate {
     let purchase = purchases[indexPath.row]
 
     presenter?.addToCart(for: purchase)
+  }
+}
+
+extension ItemSearchViewController: FilterDelegate {
+  func didApplyFilters(title: String?, price: Double?, priceMin: Double?, priceMax: Double?, categoryId: Int?) {
+    var queryParams = [String]()
+    if let title = title { queryParams.append("title=\(title)") }
+    if let price = price { queryParams.append("price=\(price)") }
+    if let priceMin = priceMin { queryParams.append("price_min=\(priceMin)") }
+    if let priceMax = priceMax { queryParams.append("price_max=\(priceMax)") }
+    if let categoryId = categoryId { queryParams.append("categoryId=\(categoryId)") }
+
+    let queryString = queryParams.joined(separator: "&")
+    let urlString = "https://api.escuelajs.co/api/v1/products/?\(queryString)"
+    print("Fetching products from: \(urlString)")
   }
 }
