@@ -5,7 +5,7 @@ protocol ItemSearchViewProtocol: AnyObject, ErrorView, LoadingView {
   func fetchCategories(_ categories: [Category])
 }
 
-class ItemSearchViewController: UIViewController {
+final class ItemSearchViewController: UIViewController {
   // MARK: - Public
   var presenter: ItemSearchPresenterProtocol?
   lazy var activityIndicator = UIActivityIndicatorView()
@@ -115,8 +115,7 @@ private extension ItemSearchViewController {
       activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
 
-      //TODO: check if zero is okey here
-      suggestionsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+      suggestionsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
       suggestionsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       suggestionsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       suggestionsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -174,7 +173,6 @@ private extension ItemSearchViewController {
 extension ItemSearchViewController: ItemSearchViewProtocol {
   func fetchItems(_ purchases: [Purchase]) {
     self.purchases = purchases
-    print(purchases.count)
 
     if self.purchases.count != 0 {
       emptyLabel.isHidden = true
@@ -336,16 +334,6 @@ extension ItemSearchViewController: ItemCellDelegate {
 
 extension ItemSearchViewController: FilterDelegate {
   func didApplyFilters(priceMax: Int?, categoryId: Int?) {
-    var queryParams = [String]()
-
-    if let priceMax = priceMax { queryParams.append("price_max=\(priceMax)") }
-    if let categoryId = categoryId { queryParams.append("categoryId=\(categoryId)") }
-
-    let queryString = queryParams.joined(separator: "&")
-    let urlString = "https://api.escuelajs.co/api/v1/products/?\(queryString)"
-    print("Fetching products from: \(urlString) \(categoryId)")
-
-
     presenter?.fetchFilteredItemsFor(priceMax: priceMax, categoryId: categoryId)
   }
 

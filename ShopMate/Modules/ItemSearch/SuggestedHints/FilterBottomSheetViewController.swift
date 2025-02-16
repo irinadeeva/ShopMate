@@ -4,7 +4,7 @@ protocol FilterDelegate: AnyObject {
   func didApplyFilters(priceMax: Int?, categoryId: Int?)
 }
 
-class FilterBottomSheetViewController: UIViewController {
+final class FilterBottomSheetViewController: UIViewController {
     weak var delegate: FilterDelegate?
 
     private let priceRangeLabel = UILabel()
@@ -23,7 +23,7 @@ class FilterBottomSheetViewController: UIViewController {
     }
 
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         view.layer.cornerRadius = 16
 
         priceRangeLabel.text = "Price: $\(Int(minPrice))"

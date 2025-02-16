@@ -19,9 +19,6 @@ final class ItemDetailInteractor: ItemDetailInteractorInput {
 
     if let purchasedItem  {
       presenter?.didFetchItem(purchasedItem)
-    } else {
-//TODO: do Error
-//      presenter?.didFailToFetchItem(with: )
     }
   }
 

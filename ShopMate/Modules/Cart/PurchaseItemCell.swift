@@ -33,7 +33,7 @@ final class PurchaseItemCell: UITableViewCell {
   private lazy var moneyLabel: UILabel = {
     let label = UILabel()
     label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-    label.textColor = .green
+    label.textColor = .systemGreen
     return label
   }()
 

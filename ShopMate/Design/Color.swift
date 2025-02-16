@@ -28,7 +28,9 @@ extension UIColor {
   
   private static let customBlackLight = UIColor(hexString: "1A1B22")
   private static let customBlackDark = UIColor.white
-  
+  private static let customGreenLight = UIColor(red: 0.1, green: 0.6, blue: 0.3, alpha: 1)
+  private static let customGreenDark = UIColor(red: 0.2, green: 0.8, blue: 0.4, alpha: 1)
+
   static let background = UIColor { traits in
     return traits.userInterfaceStyle == .dark
     ? .customBlackLight
@@ -36,6 +38,12 @@ extension UIColor {
   }
   
   static let textColor = UIColor { traits in
+    return traits.userInterfaceStyle == .dark
+    ? .customBlackDark
+    : .customBlackLight
+  }
+
+  static let greenTextColor = UIColor { traits in
     return traits.userInterfaceStyle == .dark
     ? .customBlackDark
     : .customBlackLight

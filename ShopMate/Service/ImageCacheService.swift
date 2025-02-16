@@ -8,8 +8,6 @@ protocol ImageCacheServiceProtocol {
 final class ImageCacheService {
   private let imageCache = NSCache<NSString, NSData>()
   static let shared = ImageCacheService()
-  //TODO: вынести
-  //  private let storage = ImageCacheStorage()
   
   private init() {}
 }

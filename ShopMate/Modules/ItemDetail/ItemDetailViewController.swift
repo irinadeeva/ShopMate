@@ -36,7 +36,7 @@ final class ItemDetailViewController: UIViewController {
 
   private let priceLabel: UILabel = {
     let label = UILabel()
-    label.textColor = .green
+    label.textColor = .systemGreen
     label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
     return label
   }()
@@ -136,11 +136,6 @@ private extension ItemDetailViewController {
     let activityVC = UIActivityViewController(activityItems: [textToShare], applicationActivities: nil)
 
     present(activityVC, animated: true)
-  }
-
-  @objc func addToCartTapped() {
-//    guard let item = item else { return }
-//    presenter?.addToCart(for: item)
   }
 
   func updateUI(with purchase: Purchase) {

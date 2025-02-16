@@ -14,7 +14,6 @@ final class CartViewController: UIViewController {
     let table = UITableView()
     table.register(PurchaseItemCell.self, forCellReuseIdentifier: PurchaseItemCell.identifier)
     table.separatorStyle = .none
-    //      table.allowsSelection = false
     table.dataSource = self
     table.delegate = self
     table.rowHeight = UITableView.automaticDimension

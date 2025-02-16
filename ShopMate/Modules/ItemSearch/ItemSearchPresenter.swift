@@ -43,7 +43,6 @@ final class ItemSearchPresenter {
   private func stateDidChanged() {
       switch state {
       case .initial:
-        //TODO: change
           assertionFailure("can't move to initial state")
       case .loading:
         view?.showLoadingAndBlockUI()

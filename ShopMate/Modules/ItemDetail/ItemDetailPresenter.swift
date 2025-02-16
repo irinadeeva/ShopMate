@@ -8,7 +8,6 @@ protocol ItemDetailPresenterProtocol: AnyObject {
   func viewDidLoad()
   func navigateBack()
   func getCachedImage(for images: [String]) -> [Data]
-//  func addToCart(for item: Item)
   func addToCart(_ purchase: Purchase)
 }
 
